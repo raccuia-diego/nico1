@@ -1,0 +1,4 @@
+#peo
+*.env
+*/node_modules
+backend/data/users.json

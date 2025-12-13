@@ -4,14 +4,14 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const data = Object.fromEntries(new FormData(e.target));
 
   try {
-    const res = await fetch("http://localhost:3000/api/login", {
+    const res = await fetch(`${window.API_URL}/api/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: data.email, // 🔥 AHORA SÍ LE MANDAMOS EL MAIL DEL FORM
-        password: data.password, // 🔥 Y LA CONTRASEÑA REAL
+        email: data.email, 
+        password: data.password, 
       }),
     });
 
@@ -29,4 +29,4 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     alert("Error de conexión con el servidor");
   }
 });
-//PREGUNTAR COMO FUNCIONA EL LOGIN ENTERO
+

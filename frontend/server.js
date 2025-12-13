@@ -1,8 +1,13 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
+
+const PORT = process.env.PORT || 3001;
+const API_URL = process.env.API_URL;
+app.locals.API_URL = API_URL;
 
 // Configuración de EJS
 app.set("view engine", "ejs");
@@ -28,6 +33,6 @@ app.get("/profile", (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(3001, () =>
-  console.log("Frontend corriendo en http://localhost:3001")
+app.listen(PORT, () =>
+  console.log(`Frontend corriendo en http://localhost:${PORT}`)
 );
