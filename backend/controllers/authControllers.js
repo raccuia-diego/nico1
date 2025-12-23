@@ -1,6 +1,6 @@
-const { getAllUsers, saveUsers, findUser } = require("../data/userStore");
+const { findUserByEmail, createUser } = require("../models/userModel");
 
-exports.register = (req, res) => {
+exports.register = async (req, res) => {
   try {
     console.log("Entró al register.");
 
@@ -9,41 +9,41 @@ exports.register = (req, res) => {
     if (!username || !email || !password)
       return res.status(400).json({ error: "Faltan datos" });
 
-    const users = getAllUsers();
-    const existing = findUser(email);
+    const existing = await findUserByEmail(email);
 
     if (existing) {
       return res.status(400).json({ error: "El email ya está registrado" });
     }
 
-    const newUser = { username, email, password };
-    users.push(newUser);
-
-    saveUsers(users);
-
+    await createUser({ username, email, password });
     res.json({ message: "Usuario registrado con éxito" });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
 
-
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = findUser(email);
+    const user = await findUserByEmail(email);
+
+    console.log("DB password:", user?.password);
+    console.log("Input password:", password);
 
     if (!user || user.password !== password) {
       return res.status(400).json({ error: "Credenciales inválidas" });
     }
 
-    global.currentUser = user;
-
-    res.json({ message: "Login exitoso", user });
-
+    res.json({
+      message: "Login exitoso",
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error interno del servidor" });
